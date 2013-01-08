@@ -30,6 +30,13 @@ OSStatus RenderTone(
                     AudioBufferList 			*ioData);
 void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState);
 
+@interface ToneGenerator ()
+{
+    AudioComponentInstance toneUnit;
+}
+
+@end
+
 @implementation ToneGenerator
 
 - (id)init
@@ -39,6 +46,16 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState);
         // Custom initialization
         
         // todo: set default _frequency
+        
+        _sampleRate = 44100;
+        
+        OSStatus result = AudioSessionInitialize(NULL, NULL, ToneInterruptionListener, (__bridge void *)(self));
+        if (result == kAudioSessionNoError)
+        {
+            UInt32 sessionCategory = kAudioSessionCategory_MediaPlayback;
+            AudioSessionSetProperty(kAudioSessionProperty_AudioCategory, sizeof(sessionCategory), &sessionCategory);
+        }
+        AudioSessionSetActive(true);
     }
     return self;
 }
@@ -48,7 +65,14 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState);
 }
 
 - (void)stop {
-    
+	if (toneUnit)
+	{
+		[self togglePlay];
+	}
+}
+
+- (void)cleanup { // todo: figure out where to call this
+    AudioSessionSetActive(false);
 }
 
 // from ToneGeneratorViewController:
@@ -114,7 +138,8 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState)
 	frequency = slider.value;
 	frequencyLabel.text = [NSString stringWithFormat:@"%4.1f Hz", frequency];
 }
-
+*/
+ 
 - (void)createToneUnit
 {
 	// Configure the search parameters to find the default playback output unit
@@ -151,7 +176,7 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState)
 	const int four_bytes_per_float = 4;
 	const int eight_bits_per_byte = 8;
 	AudioStreamBasicDescription streamFormat;
-	streamFormat.mSampleRate = sampleRate;
+	streamFormat.mSampleRate = _sampleRate;
 	streamFormat.mFormatID = kAudioFormatLinearPCM;
 	streamFormat.mFormatFlags =
     kAudioFormatFlagsNativeFloatPacked | kAudioFormatFlagIsNonInterleaved;
@@ -168,8 +193,8 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState)
                                 sizeof(AudioStreamBasicDescription));
 	NSAssert1(err == noErr, @"Error setting stream format: %hd", err);
 }
-
-- (IBAction)togglePlay:(UIButton *)selectedButton
+ 
+- (IBAction)togglePlay
 {
 	if (toneUnit)
 	{
@@ -177,8 +202,6 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState)
 		AudioUnitUninitialize(toneUnit);
 		AudioComponentInstanceDispose(toneUnit);
 		toneUnit = nil;
-		
-		[selectedButton setTitle:NSLocalizedString(@"Play", nil) forState:0];
 	}
 	else
 	{
@@ -191,41 +214,7 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState)
 		// Start playback
 		err = AudioOutputUnitStart(toneUnit);
 		NSAssert1(err == noErr, @"Error starting unit: %hd", err);
-		
-		[selectedButton setTitle:NSLocalizedString(@"Stop", nil) forState:0];
 	}
 }
-
-- (void)stop
-{
-	if (toneUnit)
-	{
-		[self togglePlay:playButton];
-	}
-}
-
-- (void)viewDidLoad {
-	[super viewDidLoad];
-    
-	[self sliderChanged:frequencySlider];
-	sampleRate = 44100;
-    
-	OSStatus result = AudioSessionInitialize(NULL, NULL, ToneInterruptionListener, (__bridge void *)(self));
-	if (result == kAudioSessionNoError)
-	{
-		UInt32 sessionCategory = kAudioSessionCategory_MediaPlayback;
-		AudioSessionSetProperty(kAudioSessionProperty_AudioCategory, sizeof(sessionCategory), &sessionCategory);
-	}
-	AudioSessionSetActive(true);
-}
-
-- (void)viewDidUnload {
-	self.frequencyLabel = nil;
-	self.playButton = nil;
-	self.frequencySlider = nil;
-    
-	AudioSessionSetActive(false);
-}
-*/
 
 @end
