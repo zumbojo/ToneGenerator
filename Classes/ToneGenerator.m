@@ -66,10 +66,10 @@ OSStatus RenderTone(
 	const double amplitude = 0.25;
     
 	// Get the tone parameters out of the view controller
-	ToneGeneratorViewController *viewController =
-    (__bridge ToneGeneratorViewController *)inRefCon;
-	double theta = viewController->theta;
-	double theta_increment = 2.0 * M_PI * viewController->frequency / viewController->sampleRate;
+	ToneGenerator *toneGenerator =
+    (__bridge ToneGenerator *)inRefCon;
+	double theta = toneGenerator.theta;
+	double theta_increment = 2.0 * M_PI * toneGenerator.frequency / toneGenerator.sampleRate;
     
 	// This is a mono tone generator so we only need the first buffer
 	const int channel = 0;
@@ -88,17 +88,17 @@ OSStatus RenderTone(
 	}
 	
 	// Store the theta back in the view controller
-	viewController->theta = theta;
+	toneGenerator.theta = theta;
     
 	return noErr;
 }
 
 void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState)
 {
-	ToneGeneratorViewController *viewController =
-    (__bridge ToneGeneratorViewController *)inClientData;
+	ToneGenerator *toneGenerator =
+    (__bridge ToneGenerator *)inClientData;
 	
-	[viewController stop];
+	[toneGenerator stop];
 }
 
 
