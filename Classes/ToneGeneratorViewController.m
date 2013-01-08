@@ -29,7 +29,7 @@ OSStatus RenderTone(
 
 	// Get the tone parameters out of the view controller
 	ToneGeneratorViewController *viewController =
-		(ToneGeneratorViewController *)inRefCon;
+		(__bridge ToneGeneratorViewController *)inRefCon;
 	double theta = viewController->theta;
 	double theta_increment = 2.0 * M_PI * viewController->frequency / viewController->sampleRate;
 
@@ -58,7 +58,7 @@ OSStatus RenderTone(
 void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState)
 {
 	ToneGeneratorViewController *viewController =
-		(ToneGeneratorViewController *)inClientData;
+		(__bridge ToneGeneratorViewController *)inClientData;
 	
 	[viewController stop];
 }
