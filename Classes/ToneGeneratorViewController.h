@@ -15,6 +15,8 @@
 #import <UIKit/UIKit.h>
 #import <AudioUnit/AudioUnit.h>
 
+@class ToneGenerator;
+
 @interface ToneGeneratorViewController : UIViewController
 {
 	UILabel *frequencyLabel;
@@ -31,10 +33,11 @@
 @property (nonatomic, strong) IBOutlet UISlider *frequencySlider;
 @property (nonatomic, strong) IBOutlet UIButton *playButton;
 @property (nonatomic, strong) IBOutlet UILabel *frequencyLabel;
+@property (nonatomic) ToneGenerator *toneGenerator;
 
 - (IBAction)sliderChanged:(UISlider *)frequencySlider;
 - (IBAction)togglePlay:(UIButton *)selectedButton;
-- (void)stop;
+//- (void)stop;
 
 @end
 

@@ -68,6 +68,8 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState);
 		// Start playback
 		err = AudioOutputUnitStart(toneUnit);
 		NSAssert1(err == noErr, @"Error starting unit: %hd", err);
+        
+        self.isPlaying = YES;
     }
 }
 
@@ -78,10 +80,12 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState);
 		AudioUnitUninitialize(toneUnit);
 		AudioComponentInstanceDispose(toneUnit);
 		toneUnit = nil;
+        
+        self.isPlaying = NO;
 	}
 }
 
-- (void)cleanup { // todo: figure out where to call this
+- (void)cleanup {
     AudioSessionSetActive(false);
 }
 

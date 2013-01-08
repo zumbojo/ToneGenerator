@@ -13,6 +13,53 @@
 //
 
 #import "ToneGeneratorViewController.h"
+#import "ToneGenerator.h"
+
+@implementation ToneGeneratorViewController
+
+@synthesize frequencySlider;
+@synthesize playButton;
+@synthesize frequencyLabel;
+
+- (void)viewDidLoad {
+	[super viewDidLoad];
+    
+    self.toneGenerator = [[ToneGenerator alloc] init];
+    
+	[self sliderChanged:frequencySlider];
+	sampleRate = 44100;
+}
+
+- (void)viewDidUnload {
+    [self.toneGenerator cleanup];
+}
+
+- (IBAction)sliderChanged:(UISlider *)slider
+{
+	self.toneGenerator.frequency = slider.value;
+	frequencyLabel.text = [NSString stringWithFormat:@"%4.1f Hz", self.toneGenerator.frequency];
+}
+
+- (IBAction)togglePlay:(UIButton *)selectedButton
+{
+	if (self.toneGenerator.isPlaying)
+	{
+        [self.toneGenerator stop];
+        
+		[selectedButton setTitle:NSLocalizedString(@"Play", nil) forState:0];
+	}
+	else
+	{
+        [self.toneGenerator play];
+		
+		[selectedButton setTitle:NSLocalizedString(@"Stop", nil) forState:0];
+	}
+}
+
+@end
+
+/*
+#import "ToneGeneratorViewController.h"
 #import <AudioToolbox/AudioToolbox.h>
 
 OSStatus orig_RenderTone(
@@ -188,3 +235,4 @@ void orig_ToneInterruptionListener(void *inClientData, UInt32 inInterruptionStat
 }
 
 @end
+ */
