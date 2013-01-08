@@ -28,9 +28,9 @@
 	double theta;
 }
 
-@property (nonatomic, retain) IBOutlet UISlider *frequencySlider;
-@property (nonatomic, retain) IBOutlet UIButton *playButton;
-@property (nonatomic, retain) IBOutlet UILabel *frequencyLabel;
+@property (nonatomic, strong) IBOutlet UISlider *frequencySlider;
+@property (nonatomic, strong) IBOutlet UIButton *playButton;
+@property (nonatomic, strong) IBOutlet UILabel *frequencyLabel;
 
 - (IBAction)sliderChanged:(UISlider *)frequencySlider;
 - (IBAction)togglePlay:(UIButton *)selectedButton;

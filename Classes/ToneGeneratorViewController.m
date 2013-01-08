@@ -98,7 +98,7 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState)
 	// Set our tone rendering function on the unit
 	AURenderCallbackStruct input;
 	input.inputProc = RenderTone;
-	input.inputProcRefCon = self;
+	input.inputProcRefCon = (__bridge void *)(self);
 	err = AudioUnitSetProperty(toneUnit, 
 		kAudioUnitProperty_SetRenderCallback, 
 		kAudioUnitScope_Input,
@@ -170,7 +170,7 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState)
 	[self sliderChanged:frequencySlider];
 	sampleRate = 44100;
 
-	OSStatus result = AudioSessionInitialize(NULL, NULL, ToneInterruptionListener, self);
+	OSStatus result = AudioSessionInitialize(NULL, NULL, ToneInterruptionListener, (__bridge void *)(self));
 	if (result == kAudioSessionNoError)
 	{
 		UInt32 sessionCategory = kAudioSessionCategory_MediaPlayback;
