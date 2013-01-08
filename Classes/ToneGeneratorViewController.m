@@ -93,7 +93,7 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState)
 	
 	// Create a new unit based on this that we'll use for output
 	OSErr err = AudioComponentInstanceNew(defaultOutput, &toneUnit);
-	NSAssert1(toneUnit, @"Error creating unit: %ld", err);
+	NSAssert1(toneUnit, @"Error creating unit: %hd", err);
 	
 	// Set our tone rendering function on the unit
 	AURenderCallbackStruct input;
@@ -105,7 +105,7 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState)
 		0, 
 		&input, 
 		sizeof(input));
-	NSAssert1(err == noErr, @"Error setting callback: %ld", err);
+	NSAssert1(err == noErr, @"Error setting callback: %hd", err);
 	
 	// Set the format to 32 bit, single channel, floating point, linear PCM
 	const int four_bytes_per_float = 4;
@@ -126,7 +126,7 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState)
 		0,
 		&streamFormat,
 		sizeof(AudioStreamBasicDescription));
-	NSAssert1(err == noErr, @"Error setting stream format: %ld", err);
+	NSAssert1(err == noErr, @"Error setting stream format: %hd", err);
 }
 
 - (IBAction)togglePlay:(UIButton *)selectedButton
@@ -146,11 +146,11 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState)
 		
 		// Stop changing parameters on the unit
 		OSErr err = AudioUnitInitialize(toneUnit);
-		NSAssert1(err == noErr, @"Error initializing unit: %ld", err);
+		NSAssert1(err == noErr, @"Error initializing unit: %hd", err);
 		
 		// Start playback
 		err = AudioOutputUnitStart(toneUnit);
-		NSAssert1(err == noErr, @"Error starting unit: %ld", err);
+		NSAssert1(err == noErr, @"Error starting unit: %hd", err);
 		
 		[selectedButton setTitle:NSLocalizedString(@"Stop", nil) forState:0];
 	}
