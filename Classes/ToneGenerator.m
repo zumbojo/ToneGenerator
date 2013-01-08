@@ -58,13 +58,26 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState);
 }
 
 - (void)play {
-    
+    if (!toneUnit) {
+        [self createToneUnit];
+		
+		// Stop changing parameters on the unit
+		OSErr err = AudioUnitInitialize(toneUnit);
+		NSAssert1(err == noErr, @"Error initializing unit: %hd", err);
+		
+		// Start playback
+		err = AudioOutputUnitStart(toneUnit);
+		NSAssert1(err == noErr, @"Error starting unit: %hd", err);
+    }
 }
 
 - (void)stop {
 	if (toneUnit)
 	{
-		[self togglePlay];
+		AudioOutputUnitStop(toneUnit);
+		AudioUnitUninitialize(toneUnit);
+		AudioComponentInstanceDispose(toneUnit);
+		toneUnit = nil;
 	}
 }
 
@@ -122,21 +135,6 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState)
 	[toneGenerator stop];
 }
 
-
-/*
-@implementation ToneGeneratorViewController
-
-@synthesize frequencySlider;
-@synthesize playButton;
-@synthesize frequencyLabel;
-
-- (IBAction)sliderChanged:(UISlider *)slider
-{
-	frequency = slider.value;
-	frequencyLabel.text = [NSString stringWithFormat:@"%4.1f Hz", frequency];
-}
-*/
- 
 - (void)createToneUnit
 {
 	// Configure the search parameters to find the default playback output unit
@@ -189,29 +187,6 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState)
                                 &streamFormat,
                                 sizeof(AudioStreamBasicDescription));
 	NSAssert1(err == noErr, @"Error setting stream format: %hd", err);
-}
- 
-- (IBAction)togglePlay
-{
-	if (toneUnit)
-	{
-		AudioOutputUnitStop(toneUnit);
-		AudioUnitUninitialize(toneUnit);
-		AudioComponentInstanceDispose(toneUnit);
-		toneUnit = nil;
-	}
-	else
-	{
-		[self createToneUnit];
-		
-		// Stop changing parameters on the unit
-		OSErr err = AudioUnitInitialize(toneUnit);
-		NSAssert1(err == noErr, @"Error initializing unit: %hd", err);
-		
-		// Start playback
-		err = AudioOutputUnitStart(toneUnit);
-		NSAssert1(err == noErr, @"Error starting unit: %hd", err);
-	}
 }
 
 @end
