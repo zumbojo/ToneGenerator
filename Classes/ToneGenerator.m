@@ -43,10 +43,7 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState);
 {
     self = [super init]; // http://stackoverflow.com/a/12428407/103058
     if (self) {
-        // Custom initialization
-        
-        // todo: set default _frequency
-        
+        _frequency = 5000; // default frequency        
         _sampleRate = 44100;
         
         OSStatus result = AudioSessionInitialize(NULL, NULL, ToneInterruptionListener, (__bridge void *)(self));

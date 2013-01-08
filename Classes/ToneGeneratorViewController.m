@@ -15,7 +15,7 @@
 #import "ToneGeneratorViewController.h"
 #import <AudioToolbox/AudioToolbox.h>
 
-OSStatus RenderTone(
+OSStatus orig_RenderTone(
 	void *inRefCon, 
 	AudioUnitRenderActionFlags 	*ioActionFlags, 
 	const AudioTimeStamp 		*inTimeStamp, 
@@ -55,7 +55,7 @@ OSStatus RenderTone(
 	return noErr;
 }
 
-void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState)
+void orig_ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState)
 {
 	ToneGeneratorViewController *viewController =
 		(__bridge ToneGeneratorViewController *)inClientData;
@@ -97,7 +97,7 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState)
 	
 	// Set our tone rendering function on the unit
 	AURenderCallbackStruct input;
-	input.inputProc = RenderTone;
+	input.inputProc = orig_RenderTone;
 	input.inputProcRefCon = (__bridge void *)(self);
 	err = AudioUnitSetProperty(toneUnit, 
 		kAudioUnitProperty_SetRenderCallback, 
@@ -170,7 +170,7 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState)
 	[self sliderChanged:frequencySlider];
 	sampleRate = 44100;
 
-	OSStatus result = AudioSessionInitialize(NULL, NULL, ToneInterruptionListener, (__bridge void *)(self));
+	OSStatus result = AudioSessionInitialize(NULL, NULL, orig_ToneInterruptionListener, (__bridge void *)(self));
 	if (result == kAudioSessionNoError)
 	{
 		UInt32 sessionCategory = kAudioSessionCategory_MediaPlayback;
