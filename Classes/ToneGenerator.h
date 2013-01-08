@@ -23,6 +23,8 @@
 @interface ToneGenerator : NSObject
 
 @property (nonatomic) double frequency;
+@property (nonatomic) double sampleRate;
+@property (nonatomic) double theta;
 
 - (void)play;
 - (void)stop;

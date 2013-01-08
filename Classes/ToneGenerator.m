@@ -21,6 +21,15 @@
 #import "ToneGenerator.h"
 #import <AudioToolbox/AudioToolbox.h>
 
+OSStatus RenderTone(
+                    void *inRefCon,
+                    AudioUnitRenderActionFlags 	*ioActionFlags,
+                    const AudioTimeStamp 		*inTimeStamp,
+                    UInt32 						inBusNumber,
+                    UInt32 						inNumberFrames,
+                    AudioBufferList 			*ioData);
+void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState);
+
 @implementation ToneGenerator
 
 - (id)init
@@ -44,7 +53,6 @@
 
 // from ToneGeneratorViewController:
 
-/*
 OSStatus RenderTone(
                     void *inRefCon,
                     AudioUnitRenderActionFlags 	*ioActionFlags,
@@ -93,6 +101,8 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState)
 	[viewController stop];
 }
 
+
+/*
 @implementation ToneGeneratorViewController
 
 @synthesize frequencySlider;
