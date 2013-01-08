@@ -10,4 +10,9 @@
 
 @interface ToneGenerator : NSObject
 
+@property (nonatomic) double frequency;
+
+- (void)play;
+- (void)stop;
+
 @end

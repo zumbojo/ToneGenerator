@@ -10,4 +10,23 @@
 
 @implementation ToneGenerator
 
+- (id)init
+{
+    self = [super init]; // http://stackoverflow.com/a/12428407/103058
+    if (self) {
+        // Custom initialization
+        
+        // todo: set default _frequency
+    }
+    return self;
+}
+
+- (void)play {
+    
+}
+
+- (void)stop {
+    
+}
+
 @end
