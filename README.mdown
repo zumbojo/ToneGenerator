@@ -10,7 +10,9 @@ A simple tone generator for iOS, made using [Matt Gallagher](http://www.cocoawit
 ```
 ToneGenerator *toneGenerator = [[ToneGenerator alloc] init];
 toneGenerator.frequency = 10000; // 10 KHz
-[toneGenerator start]
+[toneGenerator start];
 ```
+
+
 
 ToneGenerator is a bit basic right now; lots of changes likely await as I use it in actual projects.
