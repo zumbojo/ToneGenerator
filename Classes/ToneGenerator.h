@@ -29,6 +29,8 @@
 
 @property (nonatomic, readonly) BOOL isPlaying;
 
+// Note: start and stop may cause clicks.  Use startWithFadeInDuration and stopWithFadeOutDuration with short durations (say, 0.1) for a softer start/stop.
+
 - (void)start;
 - (void)startWithFadeInDuration:(NSTimeInterval)duration;
 - (void)stop;
