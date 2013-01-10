@@ -76,21 +76,11 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState);
     }
 }
 
+- (void)startWithFadeInDuration:(NSTimeInterval)duration {
+    // todo
+}
+
 - (void)stop {
-    self.fadeOutTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(reduceAmplitude) userInfo:nil repeats:YES];
-}
-
-- (void)reduceAmplitude {
-    NSLog(@"reduceAmplitude");
-    self.amplitude -= 0.01;
-    if (self.amplitude <= 0) {
-        NSLog(@"time for full stop");
-        [self.fadeOutTimer invalidate];
-        [self fullStop];
-    }
-}
-
-- (void)fullStop { // formerly stop:
 	if (toneUnit)
 	{
 		AudioOutputUnitStop(toneUnit);
@@ -100,6 +90,23 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState);
         
         _isPlaying = NO;
 	}
+}
+
+- (void)stopWithFadeOutDuration:(NSTimeInterval)duration {
+    
+    // todo: duration
+    
+    self.fadeOutTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(reduceAmplitude) userInfo:nil repeats:YES];
+}
+
+- (void)reduceAmplitude {
+    NSLog(@"reduceAmplitude");
+    self.amplitude -= 0.01;
+    if (self.amplitude <= 0) {
+        NSLog(@"time for full stop");
+        [self.fadeOutTimer invalidate];
+        [self stop];
+    }
 }
 
 - (void)cleanup {

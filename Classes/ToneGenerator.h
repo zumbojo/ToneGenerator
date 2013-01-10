@@ -30,7 +30,9 @@
 @property (nonatomic, readonly) BOOL isPlaying;
 
 - (void)start;
+- (void)startWithFadeInDuration:(NSTimeInterval)duration;
 - (void)stop;
+- (void)stopWithFadeOutDuration:(NSTimeInterval)duration;
 - (void)cleanup;
 
 @end
