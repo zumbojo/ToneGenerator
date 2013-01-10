@@ -4,7 +4,7 @@ ToneGenerator
 A simple tone generator for iOS made using [Matt Gallagher](http://www.cocoawithlove.com/)'s fantastic [tone generating code](http://www.cocoawithlove.com/2010/10/ios-tone-generator-introduction-to.html).  ToneGenerator is a portable class that you can drop in your app and create tones, like so:
 
 1. Copy ToneGenerator.h and ToneGenerator.m into your project.
-2. #import "ToneGenerator.h"
+2. `#import "ToneGenerator.h"`
 3. 
 
 ```
