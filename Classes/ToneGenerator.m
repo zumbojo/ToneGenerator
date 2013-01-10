@@ -44,6 +44,7 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState);
     self = [super init]; // http://stackoverflow.com/a/12428407/103058
     if (self) {
         _frequency = 5000; // default frequency        
+        _amplitude = 0.25;
         _sampleRate = 44100;
         
         OSStatus result = AudioSessionInitialize(NULL, NULL, ToneInterruptionListener, (__bridge void *)(self));
@@ -100,12 +101,10 @@ OSStatus RenderTone(
                     AudioBufferList 			*ioData)
 
 {
-	// Fixed amplitude is good enough for our purposes
-	const double amplitude = 0.25;
-    
 	// Get the tone parameters out of the view controller
 	ToneGenerator *toneGenerator =
     (__bridge ToneGenerator *)inRefCon;
+    double amplitude = toneGenerator.amplitude;
 	double theta = toneGenerator.theta;
 	double theta_increment = 2.0 * M_PI * toneGenerator.frequency / toneGenerator.sampleRate;
     
