@@ -46,7 +46,6 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState);
     self = [super init]; // http://stackoverflow.com/a/12428407/103058
     if (self) {
         _frequency = 5000; // default frequency        
-        _amplitude = 0.25;
         _sampleRate = 44100;
         
         OSStatus result = AudioSessionInitialize(NULL, NULL, ToneInterruptionListener, (__bridge void *)(self));
@@ -62,6 +61,7 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState);
 
 - (void)start {
     if (!toneUnit) {
+        _amplitude = 0.25;
         [self createToneUnit];
 		
 		// Stop changing parameters on the unit
@@ -93,15 +93,21 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState);
 }
 
 - (void)stopWithFadeOutDuration:(NSTimeInterval)duration {
+    if (!duration) {
+        [self stop];
+        return;
+    }
     
-    // todo: duration
+    const int steps = 50;
+    NSTimeInterval interval = duration / steps;
+    double amount = self.amplitude / steps; // amount of amplitude decrease per step
     
-    self.fadeOutTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(reduceAmplitude) userInfo:nil repeats:YES];
+    self.fadeOutTimer = [NSTimer scheduledTimerWithTimeInterval:interval target:self selector:@selector(reduceAmplitude:) userInfo:[NSNumber numberWithDouble:amount] repeats:YES];
 }
 
-- (void)reduceAmplitude {
+- (void)reduceAmplitude:(NSTimer *)timer {
     NSLog(@"reduceAmplitude");
-    self.amplitude -= 0.01;
+    self.amplitude -= [(NSNumber *)[timer userInfo] doubleValue];
     if (self.amplitude <= 0) {
         NSLog(@"time for full stop");
         [self.fadeOutTimer invalidate];

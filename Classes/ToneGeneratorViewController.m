@@ -44,7 +44,8 @@
 {
 	if (self.toneGenerator.isPlaying)
 	{
-        [self.toneGenerator stop];
+        //[self.toneGenerator stop];
+        [self.toneGenerator stopWithFadeOutDuration:0.1];
         
 		[selectedButton setTitle:NSLocalizedString(@"Play", nil) forState:0];
 	}
