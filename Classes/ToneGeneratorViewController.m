@@ -50,7 +50,7 @@
 	}
 	else
 	{
-        [self.toneGenerator play];
+        [self.toneGenerator start];
 		
 		[selectedButton setTitle:NSLocalizedString(@"Stop", nil) forState:0];
 	}

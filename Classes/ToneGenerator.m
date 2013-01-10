@@ -60,7 +60,7 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState);
     return self;
 }
 
-- (void)play {
+- (void)start {
     if (!toneUnit) {
         [self createToneUnit];
 		
@@ -72,7 +72,7 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState);
 		err = AudioOutputUnitStart(toneUnit);
 		NSAssert1(err == noErr, @"Error starting unit: %hd", err);
         
-        self.isPlaying = YES;
+        _isPlaying = YES;
     }
 }
 
@@ -98,7 +98,7 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState);
 		AudioComponentInstanceDispose(toneUnit);
 		toneUnit = nil;
         
-        self.isPlaying = NO;
+        _isPlaying = NO;
 	}
 }
 

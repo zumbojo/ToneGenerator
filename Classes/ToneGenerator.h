@@ -27,9 +27,9 @@
 @property (nonatomic) double sampleRate;
 @property (nonatomic) double theta;
 
-@property (nonatomic) BOOL isPlaying;
+@property (nonatomic, readonly) BOOL isPlaying;
 
-- (void)play;
+- (void)start;
 - (void)stop;
 - (void)cleanup;
 
