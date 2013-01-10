@@ -35,6 +35,8 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState);
     AudioComponentInstance toneUnit;
 }
 
+@property (nonatomic) NSTimer *fadeOutTimer;
+
 @end
 
 @implementation ToneGenerator
@@ -75,6 +77,20 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState);
 }
 
 - (void)stop {
+    self.fadeOutTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(reduceAmplitude) userInfo:nil repeats:YES];
+}
+
+- (void)reduceAmplitude {
+    NSLog(@"reduceAmplitude");
+    self.amplitude -= 0.01;
+    if (self.amplitude <= 0) {
+        NSLog(@"time for full stop");
+        [self.fadeOutTimer invalidate];
+        [self fullStop];
+    }
+}
+
+- (void)fullStop { // formerly stop:
 	if (toneUnit)
 	{
 		AudioOutputUnitStop(toneUnit);
