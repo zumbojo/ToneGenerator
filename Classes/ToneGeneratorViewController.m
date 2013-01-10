@@ -51,7 +51,8 @@
 	}
 	else
 	{
-        [self.toneGenerator start];
+        //[self.toneGenerator start];
+        [self.toneGenerator startWithFadeInDuration:0.1];
 		
 		[selectedButton setTitle:NSLocalizedString(@"Stop", nil) forState:0];
 	}

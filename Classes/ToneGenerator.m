@@ -21,6 +21,8 @@
 #import "ToneGenerator.h"
 #import <AudioToolbox/AudioToolbox.h>
 
+#define DEFAULT_AMPLITUDE 0.25
+
 OSStatus RenderTone(
                     void *inRefCon,
                     AudioUnitRenderActionFlags 	*ioActionFlags,
@@ -35,6 +37,7 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState);
     AudioComponentInstance toneUnit;
 }
 
+@property (nonatomic) NSTimer *fadeInTimer;
 @property (nonatomic) NSTimer *fadeOutTimer;
 
 @end
@@ -45,7 +48,8 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState);
 {
     self = [super init]; // http://stackoverflow.com/a/12428407/103058
     if (self) {
-        _frequency = 5000; // default frequency        
+        _frequency = 5000; // default frequency
+        _amplitude = DEFAULT_AMPLITUDE;
         _sampleRate = 44100;
         
         OSStatus result = AudioSessionInitialize(NULL, NULL, ToneInterruptionListener, (__bridge void *)(self));
@@ -61,7 +65,6 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState);
 
 - (void)start {
     if (!toneUnit) {
-        _amplitude = 0.25;
         [self createToneUnit];
 		
 		// Stop changing parameters on the unit
@@ -77,7 +80,26 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState);
 }
 
 - (void)startWithFadeInDuration:(NSTimeInterval)duration {
-    // todo
+    if (!duration) {
+        [self start];
+        return;
+    }
+    
+    self.amplitude = 0;
+    [self start];
+    
+    const int steps = 50;
+    NSTimeInterval interval = duration / steps;
+    double amount = DEFAULT_AMPLITUDE / steps; // amount of amplitude increase per step
+    
+    self.fadeInTimer = [NSTimer scheduledTimerWithTimeInterval:interval target:self selector:@selector(increaseAmplitude:) userInfo:[NSNumber numberWithDouble:amount] repeats:YES];
+}
+
+- (void)increaseAmplitude:(NSTimer *)timer {
+    self.amplitude += [(NSNumber *)[timer userInfo] doubleValue];
+    if (self.amplitude >= DEFAULT_AMPLITUDE) {
+        [self.fadeInTimer invalidate];
+    }
 }
 
 - (void)stop {
@@ -87,6 +109,7 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState);
 		AudioUnitUninitialize(toneUnit);
 		AudioComponentInstanceDispose(toneUnit);
 		toneUnit = nil;
+        _amplitude = DEFAULT_AMPLITUDE;
         
         _isPlaying = NO;
 	}
@@ -106,10 +129,8 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState);
 }
 
 - (void)reduceAmplitude:(NSTimer *)timer {
-    NSLog(@"reduceAmplitude");
     self.amplitude -= [(NSNumber *)[timer userInfo] doubleValue];
     if (self.amplitude <= 0) {
-        NSLog(@"time for full stop");
         [self.fadeOutTimer invalidate];
         [self stop];
     }
