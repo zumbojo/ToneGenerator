@@ -58,6 +58,25 @@
 	}
 }
 
+- (IBAction)playPattern:(id)sender {
+    if (self.toneGenerator.isPlaying)
+	{
+        [self.toneGenerator stopWithFadeOutDuration:0.1];
+	}
+    
+    TGPatternSegment *high = [[TGPatternSegment alloc] init];
+    high.frequency = 2000;
+    high.duration = 1;
+
+    TGPatternSegment *low = [[TGPatternSegment alloc] init];
+    low.frequency = 800;
+    low.duration = 1;
+    
+    [self.toneGenerator playPattern:@[high, low] withRepeat:YES];
+    
+    [self.playButton setTitle:NSLocalizedString(@"Stop", nil) forState:0];
+}
+
 @end
 
 /*

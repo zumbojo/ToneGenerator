@@ -142,12 +142,15 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState);
 }
 
 - (void)playPattern:(NSArray *)pattern withRepeat:(BOOL)repeat {
+    NSLog(@"playPattern");
+    /*
     self.pattern = pattern;
     self.patternIndex = 0;
     self.patternShouldRepeat = repeat;
     self.patternTimer = [NSTimer scheduledTimerWithTimeInterval:0 target:self selector:@selector(playNextPatternSegment:) userInfo:nil repeats:YES];
     
     // todo: upgrade stop methods so that they can stop patterns
+     */
 }
 
 - (void)playNextPatternSegment:(NSTimer *)timer {
@@ -259,5 +262,9 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState)
                                 sizeof(AudioStreamBasicDescription));
 	NSAssert1(err == noErr, @"Error setting stream format: %hd", err);
 }
+
+@end
+
+@implementation TGPatternSegment
 
 @end

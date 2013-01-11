@@ -37,6 +37,7 @@
 
 - (IBAction)sliderChanged:(UISlider *)frequencySlider;
 - (IBAction)togglePlay:(UIButton *)selectedButton;
+- (IBAction)playPattern:(id)sender;
 //- (void)stop;
 
 @end
