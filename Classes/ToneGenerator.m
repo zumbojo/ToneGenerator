@@ -40,6 +40,11 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState);
 @property (nonatomic) NSTimer *fadeInTimer;
 @property (nonatomic) NSTimer *fadeOutTimer;
 
+@property (nonatomic) NSArray *pattern;
+@property (nonatomic) NSUInteger *patternIndex;
+@property (nonatomic) BOOL patternShouldRepeat;
+@property (nonatomic) NSTimer *patternTimer;
+
 @end
 
 @implementation ToneGenerator
@@ -137,7 +142,16 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState);
 }
 
 - (void)playPattern:(NSArray *)pattern withRepeat:(BOOL)repeat {
+    self.pattern = pattern;
+    self.patternIndex = 0;
+    self.patternShouldRepeat = repeat;
+    self.patternTimer = [NSTimer scheduledTimerWithTimeInterval:0 target:self selector:@selector(playNextPatternSegment:) userInfo:nil repeats:YES];
     
+    // todo: upgrade stop methods so that they can stop patterns
+}
+
+- (void)playNextPatternSegment:(NSTimer *)timer {
+    // todo
 }
 
 - (void)cleanup {
