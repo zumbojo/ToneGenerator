@@ -35,6 +35,16 @@
 - (void)startWithFadeInDuration:(NSTimeInterval)duration;
 - (void)stop;
 - (void)stopWithFadeOutDuration:(NSTimeInterval)duration;
+- (void)playPattern:(NSArray *)pattern withRepeat:(BOOL)repeat;
 - (void)cleanup;
+
+@end
+
+// TGPatternSegment
+// Throw some of these in an NSArray and baby you got a pattern goin' http://www.youtube.com/watch?v=5lFZAyZPjV0
+@interface TGPatternSegment : NSObject
+
+@property (nonatomic) double frequency;
+@property (nonatomic) NSTimeInterval duration;
 
 @end

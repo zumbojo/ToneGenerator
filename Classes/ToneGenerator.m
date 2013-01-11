@@ -136,6 +136,10 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState);
     }
 }
 
+- (void)playPattern:(NSArray *)pattern withRepeat:(BOOL)repeat {
+    
+}
+
 - (void)cleanup {
     AudioSessionSetActive(false);
 }
