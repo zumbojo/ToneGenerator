@@ -66,11 +66,11 @@
     
     TGPatternSegment *high = [[TGPatternSegment alloc] init];
     high.frequency = 2000;
-    high.duration = 1;
+    high.duration = 0.2;
 
     TGPatternSegment *low = [[TGPatternSegment alloc] init];
     low.frequency = 800;
-    low.duration = 1;
+    low.duration = 0.2;
     
     [self.toneGenerator playPattern:@[high, low] withRepeat:YES];
     

@@ -146,22 +146,18 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState);
 }
 
 - (void)playPattern:(NSArray *)pattern withRepeat:(BOOL)repeat {
-    NSLog(@"playPattern");
     self.pattern = pattern;
     self.patternIndex = 0;
     self.patternShouldRepeat = repeat;
-    [self playPatternSegment:nil];
-    
-    // todo: upgrade stop methods so that they can stop patterns
+    [self playPatternSegment];
 }
 
-- (void)playPatternSegment:(NSTimer *)timer {
-    NSLog(@"playPatternSegment");
+- (void)playPatternSegment {
     if (self.patternIndex == [self.pattern count])
     {
         if (self.patternShouldRepeat) {
             self.patternIndex = 0;
-            [NSTimer scheduledTimerWithTimeInterval:0 target:self selector:@selector(playPatternSegment:) userInfo:nil repeats:NO];
+            [NSTimer scheduledTimerWithTimeInterval:0 target:self selector:@selector(playPatternSegment) userInfo:nil repeats:NO];
             return;
         }
         else {
@@ -176,7 +172,7 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState);
         [self start];
     }
     self.patternIndex += 1;
-    self.patternTimer = [NSTimer scheduledTimerWithTimeInterval:segment.duration target:self selector:@selector(playPatternSegment:) userInfo:nil repeats:NO];
+    self.patternTimer = [NSTimer scheduledTimerWithTimeInterval:segment.duration target:self selector:@selector(playPatternSegment) userInfo:nil repeats:NO];
 }
 
 - (void)cleanup {
