@@ -65,14 +65,19 @@
 	}
     
     TGPatternSegment *high = [[TGPatternSegment alloc] init];
-    high.frequency = 2000;
-    high.duration = 0.2;
+    high.frequency = 10000;
+    high.duration = 0.02;
 
     TGPatternSegment *low = [[TGPatternSegment alloc] init];
-    low.frequency = 800;
+    low.frequency = 0;
     low.duration = 0.2;
     
-    [self.toneGenerator playPattern:@[high, low] withRepeat:YES];
+    NSMutableArray *randomChirps = [[NSMutableArray alloc] init];
+    for (int i = 0; i < 500; i++) {
+        [randomChirps addObject:(arc4random_uniform(10) < 3) ? high : low ]; // add a mix of high and low, based on a random number
+    }
+    
+    [self.toneGenerator playPattern:randomChirps withRepeat:YES];
     
     [self.playButton setTitle:NSLocalizedString(@"Stop", nil) forState:0];
 }
