@@ -41,7 +41,7 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState);
 @property (nonatomic) NSTimer *fadeOutTimer;
 
 @property (nonatomic) NSArray *pattern;
-@property (nonatomic) NSUInteger *patternIndex;
+@property (nonatomic) NSUInteger patternIndex;
 @property (nonatomic) BOOL patternShouldRepeat;
 @property (nonatomic) NSTimer *patternTimer;
 
@@ -143,18 +143,36 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState);
 
 - (void)playPattern:(NSArray *)pattern withRepeat:(BOOL)repeat {
     NSLog(@"playPattern");
-    /*
     self.pattern = pattern;
     self.patternIndex = 0;
     self.patternShouldRepeat = repeat;
-    self.patternTimer = [NSTimer scheduledTimerWithTimeInterval:0 target:self selector:@selector(playNextPatternSegment:) userInfo:nil repeats:YES];
+    [self playPatternSegment:nil];
     
     // todo: upgrade stop methods so that they can stop patterns
-     */
 }
 
-- (void)playNextPatternSegment:(NSTimer *)timer {
-    // todo
+- (void)playPatternSegment:(NSTimer *)timer {
+    NSLog(@"playPatternSegment");
+    if (self.patternIndex == [self.pattern count])
+    {
+        if (self.patternShouldRepeat) {
+            self.patternIndex = 0;
+            [NSTimer scheduledTimerWithTimeInterval:0 target:self selector:@selector(playPatternSegment:) userInfo:nil repeats:NO];
+            return;
+        }
+        else {
+            [self stop];
+            return;
+        }
+    }
+    
+    TGPatternSegment *segment = [self.pattern objectAtIndex:self.patternIndex];
+    self.frequency = segment.frequency;
+    if (!self.isPlaying) {
+        [self start];
+    }
+    self.patternIndex += 1;
+    [NSTimer scheduledTimerWithTimeInterval:segment.duration target:self selector:@selector(playPatternSegment:) userInfo:nil repeats:NO];
 }
 
 - (void)cleanup {
