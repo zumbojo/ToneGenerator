@@ -108,6 +108,10 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState);
 }
 
 - (void)stop {
+    if (self.patternTimer) {
+        [self.patternTimer invalidate];
+    }
+    
 	if (toneUnit)
 	{
 		AudioOutputUnitStop(toneUnit);
@@ -172,7 +176,7 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState);
         [self start];
     }
     self.patternIndex += 1;
-    [NSTimer scheduledTimerWithTimeInterval:segment.duration target:self selector:@selector(playPatternSegment:) userInfo:nil repeats:NO];
+    self.patternTimer = [NSTimer scheduledTimerWithTimeInterval:segment.duration target:self selector:@selector(playPatternSegment:) userInfo:nil repeats:NO];
 }
 
 - (void)cleanup {
