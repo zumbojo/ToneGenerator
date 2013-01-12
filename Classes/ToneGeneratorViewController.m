@@ -73,11 +73,11 @@
     low.duration = 0.2;
     
     NSMutableArray *randomChirps = [[NSMutableArray alloc] init];
-    for (int i = 0; i < 500; i++) {
+    for (int i = 0; i < 100; i++) {
         [randomChirps addObject:(arc4random_uniform(10) < 3) ? high : low ]; // add a mix of high and low, based on a random number
     }
     
-    [self.toneGenerator playPattern:randomChirps withRepeat:YES];
+    [self.toneGenerator playPattern:randomChirps withRepeat:NO];
     
     [self.playButton setTitle:NSLocalizedString(@"Stop", nil) forState:0];
 }
